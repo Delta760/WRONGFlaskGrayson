@@ -14,9 +14,13 @@ from api.covid import covid_api # Blueprint import api definition
 from api.joke import joke_api # Blueprint import api definition
 from api.user import user_api # Blueprint import api definition
 from api.player import player_api
+from api.CharClass import classes_api
+from api.CurrentChar import currentchar_api
 # database migrations
 from model.users import initUsers
+from model.classes import initCharClasses
 from model.players import initPlayers
+from model.CurrentChars import initCurrentChars
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
@@ -29,6 +33,8 @@ db.init_app(app)
 app.register_blueprint(joke_api) # register api routes
 app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
+app.register_blueprint(classes_api)
+app.register_blueprint(currentchar_api)
 app.register_blueprint(player_api)
 app.register_blueprint(app_projects) # register app pages
 
@@ -49,7 +55,7 @@ def table():
 def before_request():
     # Check if the request came from a specific origin
     allowed_origin = request.headers.get('Origin')
-    if allowed_origin in ['http://localhost:4200', 'http://127.0.0.1:4200', 'https://nighthawkcoders.github.io']:
+    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'https://nighthawkcoders.github.io']:
         cors._origins = allowed_origin
 
 # Create an AppGroup for custom commands
@@ -60,6 +66,8 @@ custom_cli = AppGroup('custom', help='Custom commands')
 def generate_data():
     initUsers()
     initPlayers()
+    initCharClasses()
+    initCurrentChars()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
